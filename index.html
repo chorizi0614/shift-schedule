@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お給仕予定</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --linaria:    #5bc8e8;
+  --linaria-bg: #0a1c2e;
+  --linaria-lt: #c8f0ff;
+  --melty:      #e840a0;
+  --melty-bg:   #1a0818;
+  --melty-lt:   #ffc0e8;
+  --lily:       #d4a800;
+  --lily-bg:    #0e0b04;
+  --lily-lt:    #fff0c0;
+  --page:       #f4f0fb;
+  --text:       #2e2860;
+  --border:     #e0d8f8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--page);color:var(--text);min-height:100vh}
+.hero{display:grid;grid-template-columns:1fr 1fr 1fr;height:240px;position:relative;overflow:hidden}
+.sp{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:18px;cursor:pointer;overflow:hidden;transition:filter .22s;border-bottom:3px solid transparent}
+.sp:hover{filter:brightness(1.14)}
+.sp.active{border-bottom-width:4px}
+.sp-L{background:linear-gradient(150deg,#0a1628 0%,#0d2040 60%,#142850 100%);border-bottom-color:var(--linaria)}
+.sp-M{background:linear-gradient(150deg,#180510 0%,#280820 60%,#1e0618 100%);border-bottom-color:var(--melty)}
+.sp-Y{background:linear-gradient(150deg,#0e0a02 0%,#1a1205 60%,#120e04 100%);border-bottom-color:var(--lily)}
+.sp-L.active{box-shadow:inset 0 -4px 40px rgba(91,200,232,.18)}
+.sp-M.active{box-shadow:inset 0 -4px 40px rgba(232,64,160,.18)}
+.sp-Y.active{box-shadow:inset 0 -4px 40px rgba(212,168,0,.18)}
+.sp-logo{width:120px;height:120px;object-fit:contain;mix-blend-mode:screen;transition:transform .3s;position:relative;z-index:2}
+.sp:hover .sp-logo{transform:scale(1.06)}
+.sp-logo-text{font-size:13px;font-weight:700;letter-spacing:1px;position:relative;z-index:2;margin-bottom:4px}
+.sp-L .sp-logo-text{color:var(--linaria-lt)}
+.sp-M .sp-logo-text{color:var(--melty-lt)}
+.sp-Y .sp-logo-text{color:var(--lily-lt)}
+.sp-name{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;position:relative;z-index:2;margin-top:4px}
+.sp-L .sp-name{color:rgba(200,240,255,.7)}
+.sp-M .sp-name{color:rgba(255,192,232,.7)}
+.sp-Y .sp-name{color:rgba(255,240,192,.7)}
+.hero-div{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.06);z-index:10;pointer-events:none}
+.mo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:20}
+.mo-num{font-family:'Dancing Script',cursive;font-size:100px;font-weight:600;color:rgba(255,255,255,.05);line-height:1;user-select:none}
+.mo-inner{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:-28px}
+.mo-title{font-size:26px;font-weight:700;color:rgba(255,255,255,.88);letter-spacing:9px;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.mo-sub{font-family:'Dancing Script',cursive;font-size:16px;color:rgba(255,255,255,.35);letter-spacing:3px}
+.mo-year{font-size:11px;color:rgba(255,255,255,.25);letter-spacing:3px;margin-top:2px}
+.controls{background:#fff;border-bottom:1px solid var(--border);padding:9px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(60,40,120,.06)}
+.fl{font-size:11px;color:#9999bb;font-weight:500;letter-spacing:1px;text-transform:uppercase;flex-shrink:0}
+.fb{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1.5px solid #ddd;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all .18s;background:#fff;color:#888}
+.fb:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.fb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fb.is-all.on{background:var(--text);color:#fff;border-color:var(--text)}
+.fb.is-L.on{background:var(--linaria-bg);color:var(--linaria-lt);border-color:var(--linaria)}
+.fb.is-M.on{background:var(--melty-bg);color:var(--melty-lt);border-color:var(--melty)}
+.fb.is-Y.on{background:var(--lily-bg);color:var(--lily-lt);border-color:var(--lily)}
+.month-nav{margin-left:auto;display:flex;align-items:center;gap:6px}
+.mnav-btn{background:none;border:1.5px solid var(--border);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.mnav-btn:hover{background:var(--border)}
+.mnav-label{font-size:12px;font-weight:600;color:var(--text);min-width:60px;text-align:center}
+.sst{font-size:11px;color:#aaa;display:flex;align-items:center;gap:5px}
+.sdot{width:7px;height:7px;border-radius:50%;background:#ccc}
+.sdot.ok{background:#50c878}
+.sdot.err{background:#e05050}
+.sdot.ld{background:#f0a030;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+main{max-width:1320px;margin:0 auto;padding:16px 14px 48px}
+.twrap{overflow-x:auto;border-radius:14px;box-shadow:0 4px 24px rgba(60,40,120,.08);background:#fff}
+table{width:100%;border-collapse:collapse;font-size:11.5px;min-width:860px}
+thead th{background:#f7f4ff;padding:6px 3px;text-align:center;font-weight:600;border-bottom:2px solid var(--border);border-right:1px solid var(--border);white-space:nowrap;position:sticky;top:38px;z-index:10}
+thead th:first-child{position:sticky;left:0;z-index:22;background:#f0ecff;min-width:56px;border-right:2px solid var(--border)}
+.th-d{font-size:12px;font-weight:700}
+.th-w{font-size:10px;font-weight:400}
+.th-sun .th-w{color:#e04040}
+.th-sat .th-w{color:#4060e0}
+.th-today .th-d{color:#e05010}
+.th-gold{background:#fffbf0!important}
+.th-sun2{background:#fff5f5!important}
+.th-sat2{background:#f5f5ff!important}
+.th-today2{background:#fff0e8!important}
+tbody tr{border-bottom:1px solid #f0ecff;transition:background .1s}
+tbody tr:hover{background:#faf8ff}
+tbody tr.rh{display:none}
+tbody td{padding:4px 2px;text-align:center;border-right:1px solid #f0ecff;height:34px;vertical-align:middle}
+tbody td:first-child{position:sticky;left:0;background:#fff;font-weight:600;font-size:12px;color:var(--text);border-right:2px solid var(--border);z-index:5;padding:4px 10px;white-space:nowrap;text-align:left}
+tbody tr:hover td:first-child{background:#faf8ff}
+.shift{display:inline-flex;align-items:center;justify-content:center;border-radius:5px;padding:2px 5px;font-size:10.5px;font-weight:600;min-width:34px;line-height:1.3;white-space:nowrap;transition:opacity .2s}
+.shift-L{background:linear-gradient(135deg,#d6f3fc,#bce8f8);color:#0a6080;border:1.5px solid var(--linaria)}
+.shift-M{background:linear-gradient(135deg,#fde0f3,#f8c8e8);color:#800050;border:1.5px solid var(--melty)}
+.shift-Y{background:linear-gradient(135deg,#fdf6c8,#f8eea0);color:#6a5000;border:1.5px solid var(--lily)}
+.shift.dm{opacity:.1}
+.btm{margin-top:18px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+.ev-card{background:#fff;border-radius:14px;padding:16px 22px;box-shadow:0 2px 12px rgba(60,40,120,.06)}
+.ev-head{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px}
+.ev-list{list-style:none}
+.ev-list li{font-size:12px;padding:4px 0;display:flex;align-items:center;gap:12px;color:#556;border-bottom:1px dashed #eee}
+.ev-list li:last-child{border:none}
+.ev-date{font-size:11px;font-weight:600;color:#9090bb;min-width:52px}
+.lf{display:flex;gap:10px}
+.lfc{width:88px;height:88px;border-radius:14px;cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s}
+.lfc:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.lfc-L{background:var(--linaria-bg)}.lfc-M{background:var(--melty-bg)}.lfc-Y{background:var(--lily-bg)}
+.lfc img{width:68px;height:68px;object-fit:contain;mix-blend-mode:screen}
+@media(max-width:680px){.hero{height:180px}.sp-logo{width:86px;height:86px}.mo-title{font-size:19px;letter-spacing:5px}.btm{grid-template-columns:1fr}.lf{justify-content:center}}
+</style>
+</head>
+<body>
+<header class="hero" id="hero">
+  <div class="sp sp-L" id="sp-L" onclick="filter('L')">
+    <img class="sp-logo" src="logos/linaria.png" alt="Linaria" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="sp-logo-text" style="display:none">◇ Linaria</div>
+    <div class="sp-name">Linaria · Cafe &amp; Bar</div>
+  </div>
+  <div class="sp sp-M" id="sp-M" onclick="filter('M')">
+    <img class="sp-logo" src="logos/melty.png" alt="I's Melty" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="sp-logo-text" style="display:none">♡ I's Melty</div>
+    <div class="sp-name">I's Melty</div>
+  </div>
+  <div class="sp sp-Y" id="sp-Y" onclick="filter('Y')">
+    <img class="sp-logo" src="logos/lily-maid.png" alt="Lily Maid" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="sp-logo-text" style="display:none">✦ Lily Maid</div>
+    <div class="sp-name">Lily Maid · Cafe &amp; Bar</div>
+  </div>
+  <div class="hero-div" style="left:33.333%"></div>
+  <div class="hero-div" style="left:66.666%"></div>
+  <div class="mo">
+    <div class="mo-num" id="moNum"></div>
+    <div class="mo-inner">
+      <div class="mo-title">お 給 仕 予 定</div>
+      <div class="mo-sub" id="moSub"></div>
+      <div class="mo-year" id="moYear"></div>
+    </div>
+  </div>
+</header>
+<div class="controls">
+  <span class="fl">絞り込み</span>
+  <button class="fb is-all on" onclick="filter('all',this)"><span class="fb-dot" style="background:var(--text)"></span>全店舗</button>
+  <button class="fb is-L" onclick="filter('L',this)"><span class="fb-dot" style="background:var(--linaria)"></span>Linaria</button>
+  <button class="fb is-M" onclick="filter('M',this)"><span class="fb-dot" style="background:var(--melty)"></span>I's Melty</button>
+  <button class="fb is-Y" onclick="filter('Y',this)"><span class="fb-dot" style="background:var(--lily)"></span>Lily Maid</button>
+  <div class="month-nav">
+    <button class="mnav-btn" onclick="changeMonth(-1)">‹</button>
+    <span class="mnav-label" id="navLabel"></span>
+    <button class="mnav-btn" onclick="changeMonth(+1)">›</button>
+  </div>
+  <div class="sst"><span class="sdot" id="sdot"></span><span id="stxt">読み込み中…</span></div>
+</div>
+<main>
+  <div class="twrap">
+    <table id="tbl">
+      <thead><tr id="dRow"><th rowspan="2">名前</th></tr><tr id="wRow"></tr></thead>
+      <tbody id="tBody"></tbody>
+    </table>
+  </div>
+  <div class="btm">
+    <div class="ev-card">
+      <div class="ev-head">🎉 イベント告知</div>
+      <ul class="ev-list" id="evList"></ul>
+    </div>
+    <div class="lf">
+      <div class="lfc lfc-L" onclick="filter('L')"><img src="logos/linaria.png" alt="Linaria" onerror="this.parentElement.innerHTML='<span style=color:#5bc8e8>Linaria</span>'"></div>
+      <div class="lfc lfc-M" onclick="filter('M')"><img src="logos/melty.png" alt="Melty" onerror="this.parentElement.innerHTML='<span style=color:#e840a0>Melty</span>'"></div>
+      <div class="lfc lfc-Y" onclick="filter('Y')"><img src="logos/lily-maid.png" alt="Lily" onerror="this.parentElement.innerHTML='<span style=color:#d4a800>Lily</span>'"></div>
+    </div>
+  </div>
+</main>
+<script>
+const CONFIG={SHEET_ID:'',EVENTS_BY_MONTH:{'2026-6':[{date:'6月6日',text:'める 生誕'},{date:'6月13日',text:'あっと 生誕'}]},DEFAULT_MONTH:null};
+const SAMPLE={'2026-6':[['あむ',3,'L','18-L'],['あむ',4,'L','18-L'],['あむ',5,'M','20-L'],['あむ',9,'L','18-L'],['あむ',10,'L','18-L'],['あむ',12,'L','18-L'],['あむ',15,'L','18-L'],['りり',2,'M','18-23'],['りり',5,'M','19-24'],['りり',6,'M','19-24'],['りり',9,'M','18-23'],['りり',12,'M','19-24'],['りり',13,'M','19-24'],['はお',1,'L','19-23'],['はお',2,'L','20-23'],['はお',5,'L','18-23'],['はお',6,'L','18-L'],['はお',9,'L','20-23'],['はお',10,'L','18-22'],['はお',11,'L','19-23'],['はお',12,'L','18-23'],['はお',13,'L','18-L'],['なこ',1,'L','18-L'],['なこ',3,'L','18-L'],['なこ',5,'L','18-L'],['なこ',6,'L','18-L'],['なこ',7,'L','18-L'],['なこ',9,'L','18-L'],['なこ',11,'L','18-L'],['なこ',12,'L','18-L'],['なこ',13,'L','18-L'],['なこ',14,'L','18-L'],['なこ',15,'L','18-L'],['ねむち',5,'L','18-L'],['ねむち',12,'L','18-L'],['ねむち',13,'L','18-L'],['ねむち',14,'L','19-L'],['める',2,'L','18-23'],['める',3,'L','18-23'],['める',5,'L','18-L'],['める',6,'L','18-L'],['める',8,'L','18-23'],['める',10,'L','18-23'],['める',11,'L','18-23'],['める',12,'L','18-L'],['める',13,'L','18-L'],['しゅらん',1,'Y','18-24'],['しゅらん',3,'Y','18-24'],['しゅらん',6,'Y','18-L'],['しゅらん',8,'Y','18-24'],['しゅらん',11,'Y','18-24'],['しゅらん',13,'Y','18-23.5'],['しゅらん',15,'Y','18-24'],['るる',5,'M','18-L'],['るる',6,'Y','18-23.5'],['ろん',2,'L','18-23'],['ろん',9,'L','18-23'],['ろん',12,'L','18-L'],['あっと',2,'L','18-23'],['あっと',5,'L','18-L'],['あっと',6,'L','18-L'],['あっと',9,'L','19-23'],['あっと',11,'L','18-L'],['あっと',13,'L','18-L'],['あっと',15,'L','18-L'],['ぷり',5,'M','19-L'],['ぷり',6,'L','18-L'],['ぷり',10,'L','18-L'],['ぷり',13,'L','18-L'],['ぷり',15,'L','18-L'],['うに',1,'L','18-23'],['うに',2,'L','18-23'],['うに',4,'L','18-23'],['うに',5,'L','19-23'],['うに',9,'M','18-23'],['うに',11,'L','18-23'],['うに',12,'L','18-23'],['うに',13,'L','18-23'],['えま',1,'L','19-L'],['えま',3,'L','18-L'],['えま',4,'L','18-L'],['えま',5,'L','18-L'],['えま',6,'L','18-L'],['えま',8,'L','18-23'],['えま',9,'L','18-23'],['えま',10,'L','18-23'],['えま',11,'L','18-23'],['えま',13,'L','18-23'],['えま',15,'L','18-L'],['かなの',5,'M','18-24'],['かなの',6,'L','18-23'],['かなの',12,'L','19-24'],['しゃる',3,'M','18-23'],['しゃる',10,'L','18-23'],['しゃる',15,'M','18-23'],['めう',9,'L','18-L'],['めう',12,'L','18-L'],['めう',13,'L','18-L'],['ひめ',13,'L','18-L'],['せいら',2,'M','18-L'],['せいら',3,'M','18-L'],['せいら',5,'M','19-L'],['せいら',6,'M','20-L']]};
+const WD=['日','月','火','水','木','金','土'],MO_EN=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+let curKey=CONFIG.DEFAULT_MONTH||(()=>{const n=new Date();return n.getFullYear()+'-'+(n.getMonth()+1);})(),activeFilter='all';
+function sheetId(k){return(CONFIG.SHEET_BY_MONTH&&CONFIG.SHEET_BY_MONTH[k])||CONFIG.SHEET_ID||'';}
+async function loadSheet(k){const id=sheetId(k);if(!id)return null;const r=await fetch('https://docs.google.com/spreadsheets/d/'+id+'/pub?output=csv');if(!r.ok)throw new Error('HTTP '+r.status);const txt=await r.text();const SM={linaria:'L',melty:'M',lily:'Y',l:'L',m:'M',y:'Y'};return txt.trim().split('\n').slice(1).map(l=>{const[name,ds,store,time]=l.split(',').map(c=>c.trim().replace(/^"|"$/g,''));const day=parseInt(ds,10);const s=SM[store?.toLowerCase()]||store?.toUpperCase();if(!name||!day||!s||!time)return null;return[name,day,s,time];}).filter(Boolean);}
+function setStatus(cls,txt){document.getElementById('sdot').className='sdot '+cls;document.getElementById('stxt').textContent=txt;}
+function parseKey(k){const[y,m]=k.split('-').map(Number);return{y,m};}
+function render(key,rows){const{y,m}=parseKey(key);const dim=new Date(y,m,0).getDate();const tn=new Date();const todayD=(tn.getFullYear()===y&&tn.getMonth()+1===m)?tn.getDate():-1;
+document.querySelector('.mo-num').textContent=m;document.querySelector('.mo-sub').textContent=MO_EN[m];document.querySelector('.mo-year').textContent=y;document.getElementById('navLabel').textContent=y+'/'+(m<10?'0':'')+m;document.title=m+'月 お給仕予定';
+const dRow=document.getElementById('dRow'),wRow=document.getElementById('wRow');while(dRow.children.length>1)dRow.removeChild(dRow.lastChild);wRow.innerHTML='';
+for(let d=1;d<=dim;d++){const w=new Date(y,m-1,d).getDay();const isT=d===todayD,isFri=w===5,isSun=w===0,isSat=w===6;const bc=isT?'th-today2':isFri?'th-gold':isSun?'th-sun2':isSat?'th-sat2':'';const th1=document.createElement('th');th1.className=bc;th1.innerHTML='<div class="th-d'+(isT?' th-today':'')+'">'+ d+'</div>';dRow.appendChild(th1);const th2=document.createElement('th');th2.className=bc;th2.innerHTML='<div class="th-w'+(isSun?' th-sun':isSat?' th-sat':'')+'">'+WD[w]+'</div>';wRow.appendChild(th2);}
+const tbody=document.getElementById('tBody');tbody.innerHTML='';const sm=new Map();rows.forEach(([n,d,s,t])=>{if(!sm.has(n))sm.set(n,[]);sm.get(n).push({day:d,store:s,time:t});});
+sm.forEach((shifts,name)=>{const tr=document.createElement('tr');tr.dataset.stores=[...new Set(shifts.map(s=>s.store))].join(',');const ntd=document.createElement('td');ntd.textContent=name;tr.appendChild(ntd);const dm={};shifts.forEach(s=>{dm[s.day]=s;});for(let d=1;d<=dim;d++){const w=new Date(y,m-1,d).getDay();const td=document.createElement('td');const isT=d===todayD;const cls=isT?'cd-today':w===5?'cd-gold':w===0?'cd-sun':w===6?'cd-sat':'';if(cls)tr.className=cls;if(dm[d]){const s=dm[d];const sp=document.createElement('span');sp.className='shift shift-'+s.store;sp.dataset.store=s.store;sp.textContent=s.time;td.appendChild(sp);}tr.appendChild(td);}tbody.appendChild(tr);});
+const el=document.getElementById('evList');el.innerHTML='';const evs=(CONFIG.EVENTS_BY_MONTH&&CONFIG.EVENTS_BY_MONTH[key])||[];if(!evs.length){el.innerHTML='<li style="color:#bbb;font-size:11px">イベントなし</li>';}else{evs.forEach(({date,text})=>{const li=document.createElement('li');li.innerHTML='<span class="ev-date">'+date+'</span>'+text;el.appendChild(li);});}
+applyFilter(activeFilter);}
+function applyFilter(store){document.querySelectorAll('#tBody tr').forEach(tr=>{if(store==='all'){tr.classList.remove('rh');tr.querySelectorAll('.shift').forEach(s=>s.classList.remove('dm'));}else{const ss=tr.dataset.stores?tr.dataset.stores.split(','):[];ss.includes(store)?tr.classList.remove('rh'):tr.classList.add('rh');tr.querySelectorAll('.shift').forEach(s=>{s.dataset.store===store?s.classList.remove('dm'):s.classList.add('dm');});}});}
+function filter(store,btn){activeFilter=store;document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));if(store!=='all'){const p=document.getElementById('sp-'+store);if(p)p.classList.add('active');}document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));if(btn){btn.classList.add('on');}else{const cls=store==='all'?'is-all':'is-'+store;const fb=document.querySelector('.fb.'+cls);if(fb)fb.classList.add('on');}applyFilter(store);}
+function changeMonth(delta){let{y,m}=parseKey(curKey);m+=delta;if(m<1){m=12;y--;}if(m>12){m=1;y++;}curKey=y+'-'+m;loadAndRender(curKey);}
+async function loadAndRender(key){setStatus('ld','読み込み中…');try{const rows=await loadSheet(key);if(rows){render(key,rows);setStatus('ok',rows.length+'件 読み込み完了');}else{const s=SAMPLE[key]||[];render(key,s);setStatus('',s.length?'サンプルデータ表示中':'データなし');}}catch(e){console.error(e);const s=SAMPLE[key]||[];render(key,s);setStatus('err','スプシ読込失敗');}}  
+loadAndRender(curKey);
+</script>
+</body>
+</html>
