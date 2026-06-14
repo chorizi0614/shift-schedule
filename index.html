@@ -69,14 +69,16 @@ header{
   top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,rgba(240,64,176,.6),transparent);
 }
-/* Real logo (ms-logo.png — invert to white on dark bg) */
+/* Real logo (ms-logo.png — white pill background for dark bg) */
 .ms-logo{
   height:48px;
   width:auto;
-  filter:invert(1) brightness(0.92);
   display:block;
   margin:0 auto 2px;
   object-fit:contain;
+  background:rgba(255,255,255,.92);
+  border-radius:8px;
+  padding:4px 10px;
 }
 /* CSS fallback if image missing */
 .ms-logo-fallback{
@@ -114,10 +116,10 @@ header{
 }
 .ftab{
   flex:1;
-  padding:7px 4px;
+  padding:5px 4px;
   border:1.5px solid rgba(255,255,255,.11);
   border-radius:22px;
-  font-size:11px;
+  font-size:10px;
   font-family:'Noto Sans JP',sans-serif;
   font-weight:700;
   background:rgba(255,255,255,.02);
@@ -127,10 +129,10 @@ header{
   transition:all .2s;
   -webkit-tap-highlight-color:transparent;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
   gap:3px;
-  flex-direction:column;
   min-height:44px;
 }
 .ftab-logo{
@@ -157,8 +159,9 @@ header{
 .ftab.is-M.active .ftab-logo {filter:brightness(1.1) saturate(1.2) drop-shadow(0 0 4px var(--M))}
 .ftab.is-M.active .ftab-name {opacity:1}
 .ftab.is-Y                {border-color:rgba(176,168,208,.22);color:rgba(176,168,208,.6)}
+.ftab.is-Y .ftab-logo     {filter:brightness(0) invert(1) opacity(.65)}
 .ftab.is-Y.active         {background:var(--Y-dim);border-color:var(--Y);box-shadow:0 0 12px rgba(176,168,208,.18);color:var(--Y)}
-.ftab.is-Y.active .ftab-logo {filter:brightness(1.1) saturate(1.2) drop-shadow(0 0 4px var(--Y))}
+.ftab.is-Y.active .ftab-logo {filter:brightness(0) invert(1) drop-shadow(0 0 4px var(--Y))}
 .ftab.is-Y.active .ftab-name {opacity:1}
 
 /* — Period nav — */
@@ -277,7 +280,7 @@ thead th:first-child{background:#0d0b1a;z-index:11}
 /* Header rows */
 thead th{padding:0;border-bottom:1px solid var(--border);font-weight:400}
 #dRow th:first-child{
-  min-width:78px;max-width:78px;
+  min-width:92px;max-width:92px;
   padding:0 4px;font-size:11px;font-weight:700;color:var(--muted);
   vertical-align:middle;border-right:1px solid rgba(200,80,200,.12);
   text-align:center;height:26px;
@@ -307,19 +310,20 @@ tbody td:first-child{
   padding:0 6px 0 8px;
   font-size:12px;font-weight:500;
   color:rgba(255,230,255,.88);
-  height:42px;min-width:78px;max-width:78px;
+  height:42px;min-width:92px;max-width:92px;
   overflow:hidden;border-right:1px solid rgba(200,80,200,.1);
 }
 tbody td{padding:2px 1px;text-align:center;vertical-align:middle;height:42px}
 
 /* Cast name cell */
-.cast-cell{display:flex;align-items:center;gap:5px;overflow:hidden}
-.c-photo{width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1.5px solid rgba(240,64,176,.28)}
-.c-nophoto{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.09);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.12)}
+.cast-cell{display:flex;align-items:center;gap:4px;overflow:hidden}
+.c-photo{width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1.5px solid rgba(240,64,176,.28)}
+.c-nophoto{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.09);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.12)}
 .c-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
 .c-name a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
 .c-name a::after{content:'𝕏';font-size:8px;opacity:.45;flex-shrink:0}
 .c-name a:hover{opacity:.8}
+.c-name a:hover::after{opacity:.8}
 
 /* Day highlight */
 tbody td.cd-today{background:var(--today-bg)}
@@ -374,6 +378,43 @@ tbody td.cd-fri{background:var(--fri-bg)}
 .lg-item.lg-M{border-color:rgba(240,64,176,.22)}
 .lg-item.lg-Y{border-color:rgba(176,168,208,.22)}
 .lg-logo{height:20px;width:auto;max-width:70px;object-fit:contain;filter:brightness(.9)}
+.lg-item.lg-Y .lg-logo{filter:brightness(0) invert(1) opacity(.8)}
+
+/* =====================================================
+   COMPACT MODE
+===================================================== */
+.cmp-btn{
+  position:fixed;bottom:20px;right:16px;z-index:300;
+  display:flex;align-items:center;gap:5px;
+  padding:7px 13px 7px 10px;
+  border-radius:22px;
+  background:rgba(20,10,36,.9);
+  border:1.5px solid rgba(240,64,176,.35);
+  color:rgba(255,200,240,.8);
+  font-size:11px;font-weight:700;
+  cursor:pointer;
+  box-shadow:0 2px 14px rgba(0,0,0,.4);
+  -webkit-tap-highlight-color:transparent;
+  backdrop-filter:blur(8px);
+  transition:all .15s;
+}
+.cmp-btn:active{background:rgba(240,64,176,.25)}
+.cmp-btn.on{border-color:rgba(240,64,176,.75);background:rgba(240,64,176,.15);color:#fff}
+.cmp-btn .cmp-icon{font-size:13px;line-height:1}
+
+/* Compact mode overrides */
+body.compact tbody td:first-child{min-width:58px;max-width:58px;padding:0 3px 0 6px}
+body.compact .c-photo,body.compact .c-nophoto{display:none}
+body.compact .c-name{font-size:10px;font-weight:700}
+body.compact .cast-cell{justify-content:flex-start}
+body.compact .th-date{min-width:28px;width:28px}
+body.compact .th-d{font-size:9.5px;height:20px}
+body.compact .th-w{font-size:8px;height:13px}
+body.compact #dRow th:first-child{min-width:58px;max-width:58px;height:20px}
+body.compact #wRow th:first-child{height:13px}
+body.compact tbody td{height:27px;padding:1px 0}
+body.compact tbody td:first-child{height:27px}
+body.compact .shift{font-size:7.5px;padding:2px 3px;min-width:22px;border-radius:7px;letter-spacing:-.3px}
 
 /* =====================================================
    DESKTOP
@@ -384,18 +425,18 @@ tbody td.cd-fri{background:var(--fri-bg)}
   .header-title{font-size:14px;letter-spacing:6px}
   .filter-row{padding:8px 16px;gap:8px}
   .ftab{min-height:48px}
-  .ftab-name{font-size:10px}
-  .ftab-logo{height:26px;max-width:80px}
+  .ftab-logo{height:24px;max-width:78px}
   .ftab.is-all{font-size:13px}
+  .ftab-name{font-size:10px}
   #navLabel{font-size:15px}
   .th-date{min-width:44px;width:44px}
   .th-d{font-size:13px;height:28px}
   .th-w{font-size:10px;height:20px}
-  #dRow th:first-child{min-width:100px;max-width:100px;height:28px}
+  #dRow th:first-child{min-width:95px;max-width:95px;height:28px}
   #wRow th:first-child{height:20px}
-  tbody td:first-child{min-width:100px;max-width:100px;height:46px}
+  tbody td:first-child{min-width:95px;max-width:95px;height:46px}
   tbody td{height:46px}
-  .c-photo,.c-nophoto{width:32px;height:32px}
+  .c-photo,.c-nophoto{width:30px;height:30px}
   .c-name{font-size:13px}
   .shift{font-size:11px;padding:3px 7px;min-width:38px}
   .tc-photo,.tc-nophoto{width:40px;height:40px}
@@ -464,6 +505,10 @@ tbody td.cd-fri{background:var(--fri-bg)}
   </table>
 </div>
 
+<button class="cmp-btn" id="cmpBtn" onclick="toggleCompact()">
+  <span class="cmp-icon">⊞</span>コンパクト
+</button>
+
 <div class="bottom-section">
   <div class="ev-card">
     <div class="ev-head">◆ イベント情報</div>
@@ -499,8 +544,8 @@ const CONFIG = {
   },
   EVENTS_BY_MONTH: {
     '2026-6': [
-      { date:'6月6日',  text:'あっと 誕生祭' },
-      { date:'6月13日', text:'あっと 誕生祭' },
+      { date:'6月6日',  text:'める 生誕祭' },
+      { date:'6月13日', text:'あっと 生誕祭' },
     ],
   },
 };
@@ -833,6 +878,18 @@ async function loadAndRender(period){
     renderToday(sample);
     setStatus('err','サンプルデータ表示中');
   }
+}
+
+/* =====================================================
+   COMPACT MODE
+===================================================== */
+function toggleCompact(){
+  const on=document.body.classList.toggle('compact');
+  const btn=document.getElementById('cmpBtn');
+  btn.classList.toggle('on',on);
+  btn.innerHTML=on
+    ?'<span class="cmp-icon">⊟</span>通常表示'
+    :'<span class="cmp-icon">⊞</span>コンパクト';
 }
 
 /* =====================================================
