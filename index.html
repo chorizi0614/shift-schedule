@@ -287,22 +287,22 @@ thead th{padding:0;border-bottom:1px solid var(--border);font-weight:400}
 }
 #wRow th:first-child{border-right:1px solid rgba(200,80,200,.12);height:18px}
 
-/* Vertical sticky for date/weekday header rows */
-#dRow th{
-  position:sticky;
-  top:var(--header-h,191px);
+/* JS-driven sticky date header (see #stickyDates) */
+#stickyDates{
+  position:fixed;
+  left:0;right:0;
+  z-index:150;
   background:#0d0b1a;
-  z-index:9;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:none;
+  overflow:hidden;
 }
-#wRow th{
-  position:sticky;
-  top:calc(var(--header-h,191px) + var(--drow-h,26px));
+#stickyDates table{border-collapse:collapse;white-space:nowrap;table-layout:fixed}
+#stickyDates .th-date,.th-d,.th-w{pointer-events:none}
+#stickyDates thead th:first-child{
+  position:sticky;left:0;z-index:12;
   background:#0d0b1a;
-  z-index:9;
 }
-/* Corner cell: both left AND top sticky */
-#dRow th:first-child{z-index:13;background:#0d0b1a}
-#wRow th:first-child{z-index:13;background:#0d0b1a}
 
 .th-date{min-width:38px;width:38px}
 .th-d{height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,.62)}
@@ -921,20 +921,76 @@ curPeriod=periodFromHash()||detectPeriod();
 loadAndRender(curPeriod);
 setInterval(()=>loadAndRender(curPeriod),5*60*1000);
 
-/* Sticky header offset */
-function updateStickyTop(){
-  const h=document.querySelector('header').offsetHeight;
-  const dRow=document.getElementById('dRow');
-  const dh=dRow?dRow.offsetHeight:26;
-  document.documentElement.style.setProperty('--header-h',h+'px');
-  document.documentElement.style.setProperty('--drow-h',dh+'px');
-}
-updateStickyTop();
-window.addEventListener('resize',updateStickyTop);
-// Re-calc after render (today panel may show/hide)
-const _origLoadAndRender=loadAndRender;
-// eslint-disable-next-line no-global-assign
-window.addEventListener('load',()=>setTimeout(updateStickyTop,300));
+/* =====================================================
+   STICKY DATE HEADER  (JS-driven, avoids overflow-x issue)
+===================================================== */
+(function(){
+  const sticky=document.createElement('div');
+  sticky.id='stickyDates';
+  document.body.insertBefore(sticky,document.body.firstChild);
+
+  let built=false;
+
+  function build(){
+    const dRow=document.getElementById('dRow');
+    const wRow=document.getElementById('wRow');
+    if(!dRow||!wRow) return;
+    const tbl=document.createElement('table');
+    tbl.style.cssText='border-collapse:collapse;white-space:nowrap;width:100%';
+    const head=document.createElement('thead');
+    head.appendChild(dRow.cloneNode(true));
+    head.appendChild(wRow.cloneNode(true));
+    tbl.appendChild(head);
+    sticky.innerHTML='';
+    sticky.appendChild(tbl);
+    built=true;
+  }
+
+  function syncWidths(){
+    const origRow=document.getElementById('dRow');
+    if(!origRow||!built) return;
+    const origThs=origRow.querySelectorAll('th');
+    const cloneThs=sticky.querySelectorAll('tr:first-child th');
+    origThs.forEach((th,i)=>{
+      if(cloneThs[i]) cloneThs[i].style.width=th.offsetWidth+'px';
+    });
+  }
+
+  function syncScroll(){
+    const tw=document.querySelector('.table-wrap');
+    if(tw&&built) sticky.querySelector('table').style.transform='translateX(-'+tw.scrollLeft+'px)';
+  }
+
+  function onScroll(){
+    const hdr=document.querySelector('header');
+    const dRow=document.getElementById('dRow');
+    if(!hdr||!dRow) return;
+    const headerH=hdr.offsetHeight;
+    const dRowTop=dRow.getBoundingClientRect().top;
+    if(dRowTop<headerH){
+      if(!built) build();
+      sticky.style.display='block';
+      sticky.style.top=headerH+'px';
+      syncWidths();
+      syncScroll();
+    } else {
+      sticky.style.display='none';
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',()=>{built=false;onScroll()});
+  document.querySelector('.table-wrap')?.addEventListener('scroll',syncScroll,{passive:true});
+  // Re-attach scroll listener after render (table-wrap gets recreated on nav)
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.nav-btn')){
+      setTimeout(()=>{
+        document.querySelector('.table-wrap')?.addEventListener('scroll',syncScroll,{passive:true});
+        built=false;
+      },400);
+    }
+  });
+})();
 </script>
 </body>
 </html>
