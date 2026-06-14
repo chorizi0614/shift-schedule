@@ -295,6 +295,7 @@ thead th{padding:0;border-bottom:1px solid var(--border);font-weight:400}
   display:none;
   overflow-x:auto;overflow-y:hidden;
   scrollbar-width:none;
+  pointer-events:none;
 }
 #stickyDates::-webkit-scrollbar{display:none}
 #stickyDates table{border-collapse:collapse;white-space:nowrap;table-layout:fixed}
@@ -929,15 +930,22 @@ setInterval(()=>loadAndRender(curPeriod),5*60*1000);
   let built=false, widthsSynced=false, ticking=false, visible=false;
   const GAP=5; // px hysteresis to prevent boundary flicker
 
+  // Always reference the ORIGINAL rows (not clones) to avoid id collision
+  function getOrigDRow(){ return document.querySelector('.table-wrap #dRow'); }
+
   function build(){
-    const dRow=document.getElementById('dRow');
-    const wRow=document.getElementById('wRow');
+    const dRow=getOrigDRow();
+    const wRow=document.querySelector('.table-wrap #wRow');
     if(!dRow||!wRow) return;
     const tbl=document.createElement('table');
     tbl.style.cssText='border-collapse:collapse;white-space:nowrap;table-layout:fixed';
     const head=document.createElement('thead');
-    head.appendChild(dRow.cloneNode(true));
-    head.appendChild(wRow.cloneNode(true));
+    const cloneDRow=dRow.cloneNode(true);
+    const cloneWRow=wRow.cloneNode(true);
+    cloneDRow.removeAttribute('id'); // prevent id collision
+    cloneWRow.removeAttribute('id');
+    head.appendChild(cloneDRow);
+    head.appendChild(cloneWRow);
     tbl.appendChild(head);
     sticky.innerHTML='';
     sticky.appendChild(tbl);
@@ -946,7 +954,7 @@ setInterval(()=>loadAndRender(curPeriod),5*60*1000);
 
   function syncWidths(){
     if(widthsSynced) return;
-    const origRow=document.getElementById('dRow');
+    const origRow=getOrigDRow();
     if(!origRow||!built) return;
     const origThs=origRow.querySelectorAll('th');
     const cloneThs=sticky.querySelectorAll('tr:first-child th');
@@ -969,7 +977,7 @@ setInterval(()=>loadAndRender(curPeriod),5*60*1000);
   function update(){
     ticking=false;
     const hdr=document.querySelector('header');
-    const dRow=document.getElementById('dRow');
+    const dRow=getOrigDRow();
     if(!hdr||!dRow) return;
     const headerH=hdr.offsetHeight;
     const top=dRow.getBoundingClientRect().top;
