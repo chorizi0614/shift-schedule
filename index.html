@@ -800,8 +800,7 @@ function render(period, allRows){
     let dayInner;
     if(isT) dayInner=`<span>${d}</span>`;
     else if(isEv){
-      const short=evDayMap.get(d).replace(/\s*生誕祭/g,'誕').replace(/[\s　]/g,'');
-      dayInner=`<span class="ev-badge">${d}</span><span class="ev-label">${short}</span>`;
+      dayInner=`<span class="ev-badge">${d}</span>`;
       evBodyCSS+=`#tBody td:nth-child(${colIdx}){background:rgba(240,64,176,.055)!important}`;
     }else dayInner=d;
     th1.innerHTML=`<div class="th-d">${dayInner}</div>`;
