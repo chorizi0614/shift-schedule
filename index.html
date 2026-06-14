@@ -308,7 +308,7 @@ thead th{padding:0;border-bottom:1px solid var(--border);font-weight:400}
 
 /* Column colors */
 .col-sun .th-d,.col-sun .th-w{color:rgba(255,100,100,.8)}
-.col-sat .th-d,.col-sat .th-w{color:rgba(100,160,255,.8)}
+.col-sat .th-d,.col-sat .th-w{color:rgba(64,220,255,.85)}
 .col-fri .th-d,.col-fri .th-w{color:rgba(160,255,80,.7)}
 .col-today .th-d{color:#fff;font-weight:700}
 .col-today .th-d > span{
@@ -317,12 +317,12 @@ thead th{padding:0;border-bottom:1px solid var(--border);font-weight:400}
   background:rgba(255,210,80,.28);border:1px solid rgba(255,210,80,.55);
 }
 /* Event day column */
-.col-event .th-d{color:#f565c8;font-weight:700}
+.col-event .th-d{color:#ffe066;font-weight:700}
 .col-event .th-d > .ev-badge{
   display:inline-flex;align-items:center;justify-content:center;
   width:22px;height:22px;border-radius:50%;
-  background:rgba(240,64,176,.22);border:1px solid rgba(240,64,176,.6);
-  color:#f565c8;
+  background:rgba(255,220,0,.22);border:1px solid rgba(255,210,0,.65);
+  color:#ffe066;
 }
 .ev-label{
   display:block;font-size:7px;line-height:1.2;margin-top:2px;
@@ -801,7 +801,7 @@ function render(period, allRows){
     if(isT) dayInner=`<span>${d}</span>`;
     else if(isEv){
       dayInner=`<span class="ev-badge">${d}</span>`;
-      evBodyCSS+=`#tBody td:nth-child(${colIdx}){background:rgba(240,64,176,.055)!important}`;
+      evBodyCSS+=`#tBody td:nth-child(${colIdx}){background:rgba(255,210,0,.05)!important}`;
     }else dayInner=d;
     th1.innerHTML=`<div class="th-d">${dayInner}</div>`;
     dRow.appendChild(th1);
