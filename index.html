@@ -292,10 +292,12 @@ thead th{padding:0;border-bottom:1px solid var(--border);font-weight:400}
   position:fixed;left:0;right:0;z-index:150;
   background:#0d0b1a;
   border-bottom:1px solid rgba(255,255,255,.07);
-  display:none;overflow:hidden;
-  will-change:transform;
+  display:none;
+  overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;
 }
-#stickyDates table{border-collapse:collapse;white-space:nowrap;table-layout:fixed;will-change:transform}
+#stickyDates::-webkit-scrollbar{display:none}
+#stickyDates table{border-collapse:collapse;white-space:nowrap;table-layout:fixed}
 #stickyDates thead th:first-child{position:sticky;left:0;z-index:12;background:#0d0b1a}
 #stickyDates .th-d,#stickyDates .th-w{pointer-events:none}
 
@@ -961,8 +963,7 @@ setInterval(()=>loadAndRender(curPeriod),5*60*1000);
   function syncScroll(){
     if(!built) return;
     const tw=document.querySelector('.table-wrap');
-    const tbl=sticky.querySelector('table');
-    if(tw&&tbl) tbl.style.transform='translateX(-'+tw.scrollLeft+'px)';
+    if(tw) sticky.scrollLeft=tw.scrollLeft;
   }
 
   function update(){
