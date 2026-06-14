@@ -129,26 +129,37 @@ header{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:0;
-  min-height:38px;
+  gap:3px;
+  flex-direction:column;
+  min-height:44px;
 }
 .ftab-logo{
-  height:22px;width:auto;max-width:66px;
+  height:20px;width:auto;max-width:64px;
   object-fit:contain;
   filter:brightness(.78) saturate(.85);
   transition:filter .2s;
 }
+.ftab-name{
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.5px;
+  opacity:.6;
+  line-height:1;
+}
 .ftab.is-all              {font-size:12px;font-weight:700}
 .ftab.is-all.active       {background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.45);color:#fff}
-.ftab.is-L                {border-color:rgba(91,204,232,.22)}
-.ftab.is-L.active         {background:var(--L-dim);border-color:var(--L);box-shadow:0 0 12px rgba(91,204,232,.18)}
+.ftab.is-L                {border-color:rgba(91,204,232,.22);color:rgba(91,204,232,.6)}
+.ftab.is-L.active         {background:var(--L-dim);border-color:var(--L);box-shadow:0 0 12px rgba(91,204,232,.18);color:var(--L)}
 .ftab.is-L.active .ftab-logo {filter:brightness(1.1) saturate(1.2) drop-shadow(0 0 4px var(--L))}
-.ftab.is-M                {border-color:rgba(240,64,176,.22)}
-.ftab.is-M.active         {background:var(--M-dim);border-color:var(--M);box-shadow:0 0 12px rgba(240,64,176,.18)}
+.ftab.is-L.active .ftab-name {opacity:1}
+.ftab.is-M                {border-color:rgba(240,64,176,.22);color:rgba(240,64,176,.6)}
+.ftab.is-M.active         {background:var(--M-dim);border-color:var(--M);box-shadow:0 0 12px rgba(240,64,176,.18);color:var(--M)}
 .ftab.is-M.active .ftab-logo {filter:brightness(1.1) saturate(1.2) drop-shadow(0 0 4px var(--M))}
-.ftab.is-Y                {border-color:rgba(176,168,208,.22)}
-.ftab.is-Y.active         {background:var(--Y-dim);border-color:var(--Y);box-shadow:0 0 12px rgba(176,168,208,.18)}
+.ftab.is-M.active .ftab-name {opacity:1}
+.ftab.is-Y                {border-color:rgba(176,168,208,.22);color:rgba(176,168,208,.6)}
+.ftab.is-Y.active         {background:var(--Y-dim);border-color:var(--Y);box-shadow:0 0 12px rgba(176,168,208,.18);color:var(--Y)}
 .ftab.is-Y.active .ftab-logo {filter:brightness(1.1) saturate(1.2) drop-shadow(0 0 4px var(--Y))}
+.ftab.is-Y.active .ftab-name {opacity:1}
 
 /* — Period nav — */
 .nav-row{
@@ -218,10 +229,11 @@ header{
 .tc.tc-M{border:1.5px solid rgba(240,64,176,.35);background:rgba(240,64,176,.07)}
 .tc.tc-Y{border:1.5px solid rgba(176,168,208,.35);background:rgba(176,168,208,.07)}
 .tc-photo{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2)}
-.tc-nophoto{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);flex-shrink:0}
+.tc-nophoto{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.09);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.12)}
 .tc-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.92)}
-.tc-name a{color:inherit;text-decoration:none}
-.tc-name a:hover{text-decoration:underline;opacity:.8}
+.tc-name a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.tc-name a::after{content:'𝕏';font-size:9px;opacity:.45;flex-shrink:0}
+.tc-name a:hover{opacity:.8}
 .tc-time{font-size:10px;color:rgba(255,255,255,.42);margin-left:1px}
 .tc-slogo{height:14px;width:auto;max-width:36px;object-fit:contain;opacity:.6;flex-shrink:0}
 
@@ -303,10 +315,11 @@ tbody td{padding:2px 1px;text-align:center;vertical-align:middle;height:42px}
 /* Cast name cell */
 .cast-cell{display:flex;align-items:center;gap:5px;overflow:hidden}
 .c-photo{width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1.5px solid rgba(240,64,176,.28)}
-.c-nophoto{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.07);flex-shrink:0}
+.c-nophoto{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.09);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.12)}
 .c-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
-.c-name a{color:inherit;text-decoration:none}
-.c-name a:hover{text-decoration:underline;opacity:.8}
+.c-name a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.c-name a::after{content:'𝕏';font-size:8px;opacity:.45;flex-shrink:0}
+.c-name a:hover{opacity:.8}
 
 /* Day highlight */
 tbody td.cd-today{background:var(--today-bg)}
@@ -370,7 +383,8 @@ tbody td.cd-fri{background:var(--fri-bg)}
   .ms-logo{height:60px}
   .header-title{font-size:14px;letter-spacing:6px}
   .filter-row{padding:8px 16px;gap:8px}
-  .ftab{min-height:42px}
+  .ftab{min-height:48px}
+  .ftab-name{font-size:10px}
   .ftab-logo{height:26px;max-width:80px}
   .ftab.is-all{font-size:13px}
   #navLabel{font-size:15px}
@@ -407,18 +421,18 @@ tbody td.cd-fri{background:var(--fri-bg)}
     <button class="ftab is-all active" onclick="setFilter('all',this)">全店舗</button>
     <button class="ftab is-L" onclick="setFilter('L',this)">
       <img class="ftab-logo" src="https://linaria-cafe.com/img/logo-linaria.webp" alt="Linaria"
-           onerror="this.style.display='none';this.nextSibling.style.display='inline'">
-      <span style="display:none">Linaria</span>
+           onerror="this.style.display='none'">
+      <span class="ftab-name">Linaria</span>
     </button>
     <button class="ftab is-M" onclick="setFilter('M',this)">
       <img class="ftab-logo" src="https://is-melty.jp/img/logo-ismelty.webp" alt="I's Melty"
-           onerror="this.style.display='none';this.nextSibling.style.display='inline'">
-      <span style="display:none">I's Melty</span>
+           onerror="this.style.display='none'">
+      <span class="ftab-name">I's Melty</span>
     </button>
     <button class="ftab is-Y" onclick="setFilter('Y',this)">
       <img class="ftab-logo" src="https://lily-maid.com/img/logo-lilymaid.webp" alt="Lily Maid"
-           onerror="this.style.display='none';this.nextSibling.style.display='inline'">
-      <span style="display:none">Lily Maid</span>
+           onerror="this.style.display='none'">
+      <span class="ftab-name">Lily Maid</span>
     </button>
   </div>
 
@@ -658,9 +672,10 @@ function renderToday(allRows){
   today.forEach(([name,,store,time,photo,xid])=>{
     const chip=document.createElement('div');
     chip.className='tc tc-'+store;
+    const initial=name.charAt(0);
     const img=photo
-      ?`<img class="tc-photo" src="${CONFIG.PHOTO_BASE}${photo}" alt="${name}" onerror="this.className='tc-nophoto'">`
-      :`<span class="tc-nophoto"></span>`;
+      ?`<img class="tc-photo" src="${CONFIG.PHOTO_BASE}${photo}" alt="${name}" onerror="this.outerHTML='<span class=\\'tc-nophoto\\'>${initial}</span>'">`
+      :`<span class="tc-nophoto">${initial}</span>`;
     const nm=xid
       ?`<span class="tc-name"><a href="https://x.com/${xid}" target="_blank" rel="noopener">${name}</a></span>`
       :`<span class="tc-name">${name}</span>`;
@@ -727,9 +742,10 @@ function render(period, allRows){
     /* Name cell */
     const{photo,xid}=meta[name]||{};
     const nameTd=document.createElement('td');
+    const initial=name.charAt(0);
     const img=photo
-      ?`<img class="c-photo" src="${CONFIG.PHOTO_BASE}${photo}" alt="${name}" onerror="this.className='c-nophoto'">`
-      :`<span class="c-nophoto"></span>`;
+      ?`<img class="c-photo" src="${CONFIG.PHOTO_BASE}${photo}" alt="${name}" onerror="this.outerHTML='<span class=\\'c-nophoto\\'>${initial}</span>'">`
+      :`<span class="c-nophoto">${initial}</span>`;
     const nm=xid
       ?`<span class="c-name"><a href="https://x.com/${xid}" target="_blank" rel="noopener">${name}</a></span>`
       :`<span class="c-name">${name}</span>`;
